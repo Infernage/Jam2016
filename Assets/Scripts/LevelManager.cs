@@ -5,10 +5,16 @@ public class LevelManager : MonoBehaviour {
     private CharacterScript characterScript;
     private State currentState;
     private bool alert = false;
+    private GameObject panelGrid;
+    public AudioClip gridAudio;
+    private AudioSource audioSource;
+    
 
 	// Use this for initialization
 	void Start () {
         characterScript = FindObjectOfType<CharacterScript>();
+        panelGrid = GameObject.Find("GridAnimation");
+        audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -29,6 +35,9 @@ public class LevelManager : MonoBehaviour {
         if (currentState == State.Trapped)
         {
             // TODO: Loose
+            panelGrid.GetComponent<Animator>().Play("GridAnimation");
+            audioSource.clip = gridAudio;
+            audioSource.Play();
         }
 
         // Alert state
