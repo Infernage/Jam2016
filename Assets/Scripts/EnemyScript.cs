@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EnemyScript : MonoBehaviour {
+    public bool debug = true;
     public float speed = 0;
     public Waypoint currentNode;
     private List<Waypoint> nodeList;
@@ -14,6 +15,12 @@ public class EnemyScript : MonoBehaviour {
 	void Start () {
         if (currentNode == null) return;
         if (speed == 0) speed = 5;
+
+        GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+        foreach (GameObject obj in waypoints)
+        {
+            obj.GetComponent<SpriteRenderer>().enabled = false;
+        }
 
         // Breadth First Search from initial waypoint
         Waypoint current = currentNode;
