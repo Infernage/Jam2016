@@ -2,13 +2,13 @@
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
-    private CharacterController characterScript;
+    private CharacterScript characterScript;
     private State currentState;
     private bool alert = false;
 
 	// Use this for initialization
 	void Start () {
-        characterScript = FindObjectOfType<CharacterController>();
+        characterScript = FindObjectOfType<CharacterScript>();
 	}
 	
 	// Update is called once per frame
