@@ -52,7 +52,7 @@ public class EnemyScript : MonoBehaviour {
             Vector2 dir = currentPath[next].transform.position - transform.position;
             if (dir == Vector2.zero)
             {
-                spriteTransform.LookAt(currentPath[next].transform.position);
+                //spriteTransform.LookAt(currentPath[next].transform.position);
                 if (next + 1 == currentPath.Count)
                 {
                     currentNode = currentPath[next];
@@ -63,6 +63,7 @@ public class EnemyScript : MonoBehaviour {
                 {
                     next++;
                     timer = 1f;
+                    Rotate();
                 }
             }
             else if (timer > 0)
@@ -113,5 +114,13 @@ public class EnemyScript : MonoBehaviour {
                 else return; // Found, we keep going back!
             }
         }
+    }
+
+    void Rotate()
+    {
+        Vector3 direction = currentPath[next].transform.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        spriteTransform = transform.FindChild("Sprite");
+        spriteTransform.rotation = Quaternion.Euler(0, 0, angle - 90.0f);
     }
 }
