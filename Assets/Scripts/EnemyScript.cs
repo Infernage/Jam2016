@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class EnemyScript : MonoBehaviour {
     public bool debug = true;
     public float speed = 0;
-    public Waypoint currentNode;
+    private Waypoint currentNode;
     private List<Waypoint> nodeList;
     private List<Waypoint> currentPath;
     private int next;
@@ -15,7 +15,6 @@ public class EnemyScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (currentNode == null) return;
         if (speed == 0) speed = 5;
 
         spriteTransform = transform.FindChild("Sprite");
@@ -27,7 +26,7 @@ public class EnemyScript : MonoBehaviour {
         }
 
         // Breadth First Search from initial waypoint
-        Waypoint current = currentNode;
+        Waypoint current = FindObjectOfType<Waypoint>();
         Queue<Waypoint> queue = new Queue<Waypoint>();
         nodeList = new List<Waypoint>();
         queue.Enqueue(current);
@@ -41,13 +40,15 @@ public class EnemyScript : MonoBehaviour {
                 queue.Enqueue(node);
             }
         }
+
+        // Get random node
+        currentNode = nodeList[Random.Range(0, nodeList.Count - 1)];
+        transform.position = currentNode.transform.position;
     }
 
     // Update is called once per frame
     void Update ()
     {
-        if (currentNode == null) return;
-
         if (currentPath != null)
         {
             Vector2 dir = currentPath[next].transform.position - transform.position;

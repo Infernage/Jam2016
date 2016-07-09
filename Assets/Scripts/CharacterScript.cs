@@ -9,6 +9,7 @@ public class CharacterScript : MonoBehaviour
     public float speed = 5;
     public float visionDistance = 10, visionAngle = 20;
     private GameObject goWhatISee;
+    private bool crouched = false;
 
     public bool HasMinObjects()
     {
@@ -63,9 +64,15 @@ public class CharacterScript : MonoBehaviour
                 {
                     Debug.Log("El código que veo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode);
                 }
-                
-
             }
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            crouched = true;
+        }
+        else
+        {
+            crouched = false;
         }
 
     }
@@ -112,5 +119,10 @@ public class CharacterScript : MonoBehaviour
         Debug.Log("Fuera de colision");
         goWhatISee = null;
     }
-    
+
+
+    public bool isCrouched()
+    {
+        return this.crouched;
+    }
 }
