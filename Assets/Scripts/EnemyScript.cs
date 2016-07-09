@@ -10,11 +10,14 @@ public class EnemyScript : MonoBehaviour {
     private List<Waypoint> currentPath;
     private int next;
     private float timer = 3f;
+    private Transform spriteTransform;
 
 	// Use this for initialization
 	void Start () {
         if (currentNode == null) return;
         if (speed == 0) speed = 5;
+
+        spriteTransform = transform.FindChild("Sprite");
 
         GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         foreach (GameObject obj in waypoints)
@@ -49,7 +52,7 @@ public class EnemyScript : MonoBehaviour {
             Vector2 dir = currentPath[next].transform.position - transform.position;
             if (dir == Vector2.zero)
             {
-                transform.LookAt(currentPath[next].transform);
+                spriteTransform.LookAt(currentPath[next].transform.position);
                 if (next + 1 == currentPath.Count)
                 {
                     currentNode = currentPath[next];
