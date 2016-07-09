@@ -46,9 +46,10 @@ public class EnemyScript : MonoBehaviour {
 
         if (currentPath != null)
         {
-            Vector2 dir = currentPath[Mathf.Abs(next)].transform.position - transform.position;
+            Vector2 dir = currentPath[next].transform.position - transform.position;
             if (dir == Vector2.zero)
             {
+                transform.LookAt(currentPath[next].transform);
                 if (next + 1 == currentPath.Count)
                 {
                     currentNode = currentPath[next];
@@ -76,43 +77,37 @@ public class EnemyScript : MonoBehaviour {
         }
         else
         {
-            SearchPath();
+            List<Waypoint> targetNodes = new List<Waypoint>(nodeList);
+            targetNodes.Remove(currentNode);
+            Waypoint target = targetNodes[Random.Range(0, targetNodes.Count - 1)];
+            List<Waypoint> path = new List<Waypoint>();
+            List<Waypoint> explored = new List<Waypoint>();
+            // Breadth First Search from initial waypoint
+            SearchPath(target, currentNode, path, explored);
             next = 0;
         }
     }
 
-    private void SearchPath()
+    private void SearchPath(Waypoint target, Waypoint expanded, List<Waypoint> path, List<Waypoint> explored)
     {
-        List<Waypoint> targetNodes = new List<Waypoint>(nodeList);
-        targetNodes.Remove(currentNode);
-        Waypoint target = targetNodes[Random.Range(0, targetNodes.Count - 1)];
-        // Breadth First Search from initial waypoint 
-        Waypoint current = currentNode;
-        Queue<Waypoint> queue = new Queue<Waypoint>();
-        List<Waypoint> path = new List<Waypoint>();
-        List<Waypoint> explored = new List<Waypoint>();
-        Dictionary<Waypoint, List<Waypoint>> partialPaths = new Dictionary<Waypoint, List<Waypoint>>();
-        queue.Enqueue(current);
-        while (queue.Count > 0)
+        if (explored.Contains(expanded)) return;
+        explored.Add(expanded);
+        path.Add(expanded);
+        foreach (Waypoint node in expanded.linkedNodes)
         {
-            current = queue.Dequeue();
-            explored.Add(current);
-            if (partialPaths.Count > 0) path = partialPaths[current];
-            path.Add(current);
-            foreach (Waypoint node in current.linkedNodes)
+            if (explored.Contains(node)) continue; // Ignore duplicates
+            if (node.ID == target.ID)
             {
-                if (explored.Contains(node)) continue;
-                if (node.ID == target.ID)
-                {
-                    path.Add(target);
-                    currentPath = path;
-                    return;
-                }
-                else
-                {
-                    queue.Enqueue(node);
-                    partialPaths.Add(node, new List<Waypoint>(path));
-                }
+                // Found path!
+                path.Add(target);
+                currentPath = path;
+                return;
+            }
+            else
+            {
+                SearchPath(target, node, path, explored);
+                if (!path.Contains(target)) path.Remove(node);
+                else return; // Found, we keep going back!
             }
         }
     }

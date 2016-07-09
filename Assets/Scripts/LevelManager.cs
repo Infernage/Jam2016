@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class LevelManager : MonoBehaviour {
+    public Vector2 playerStartWin;
+    public float winRadious;
     private CharacterScript characterScript;
     private State currentState;
     private bool alert = false;
