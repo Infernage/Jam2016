@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
 public class CombinationController : MonoBehaviour
 {
@@ -110,7 +112,7 @@ public class CombinationController : MonoBehaviour
     private bool CompareCodes()
     {
         bool correct = true;
-        for (int i = 0; i < code.Length; i++)
+        for (int i = 0; i < digitArr(LevelManager.computerCodeStatic).Length; i++)
         {
             if (code[i] != inputCode[i])
             {
@@ -118,6 +120,20 @@ public class CombinationController : MonoBehaviour
             }
         }
         return correct;
+    }
+
+    public static int[] digitArr(int n)
+    {
+        if (n == 0) return new int[1] { 0 };
+
+        var digits = new List<int>();
+
+        for (; n != 0; n /= 10)
+            digits.Add(n % 10);
+
+        var arr = digits.ToArray();
+        Array.Reverse(arr);
+        return arr;
     }
 
     IEnumerator CleanScreen()

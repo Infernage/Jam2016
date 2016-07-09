@@ -9,13 +9,15 @@ public class LevelManager : MonoBehaviour {
     private GameObject panelGrid;
     public AudioClip gridAudio;
     private AudioSource audioSource;
-    
+    private GameObject[] computers;
+    public static int computerCodeStatic = 0;
 
 	// Use this for initialization
 	void Start () {
         characterScript = FindObjectOfType<CharacterScript>();
         panelGrid = GameObject.Find("GridAnimation");
         audioSource = GetComponent<AudioSource>();
+        setCodeOnComputer();
 	}
 	
 	// Update is called once per frame
@@ -54,5 +56,13 @@ public class LevelManager : MonoBehaviour {
         Pause,
         Exit,
         Trapped
+    }
+
+    private void setCodeOnComputer()
+    {
+        computers = GameObject.FindGameObjectsWithTag("Computer");
+        computerCodeStatic = Random.Range(1, 9999);
+        Debug.Log("El código del banco es:" + computerCodeStatic.ToString());
+        computers[Random.Range(0, computers.Length)].GetComponent<ComputersScript>().computerCode = computerCodeStatic;
     }
 }

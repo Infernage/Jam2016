@@ -54,8 +54,17 @@ public class CharacterScript : MonoBehaviour
             //TODO Lo queremos como E o como Espacio??
             if (canGetObjects() != "" && Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log("Puedo coger esto: " + goWhatISee.tag);
-                Destroy(goWhatISee);
+                if (goWhatISee.tag == "Joya")
+                {
+                    Debug.Log("Puedo coger esto: " + goWhatISee.tag);
+                    Destroy(goWhatISee);
+                }
+                else if (goWhatISee.tag == "Computer")
+                {
+                    Debug.Log("El código que veo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode);
+                }
+                
+
             }
         }
 
@@ -90,7 +99,7 @@ public class CharacterScript : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
         //TODO Esto lo podemos cambiar a !="Untagged" y después según lo que sea pues lo cogemos, o desaparece o lo que se quiera
-        if (collision.gameObject.tag == "Joya")
+        if (collision.gameObject.tag == "Unttaged")
         {
             //Destroy(collision.gameObject);
             Debug.Log("Dentro del colision");
