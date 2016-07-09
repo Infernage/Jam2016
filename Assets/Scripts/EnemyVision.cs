@@ -16,7 +16,6 @@ public class EnemyVision : MonoBehaviour
 
     void FixedUpdate()
     {
-        player.transform.Translate(0.1f, 0, 0);
         if (canSeePlayer())
         {
             print("Te veo!!!");
@@ -42,12 +41,12 @@ public class EnemyVision : MonoBehaviour
         return result;
     }
 
-    public void OnDrawGizmosSelected()
+    /*public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         GameObject player = GameObject.FindWithTag("Player");
         Vector2 direction = player.transform.position - transform.position;
 
         Gizmos.DrawRay(transform.position, Vector2.up * visionDistance);
-    }
+    }*/
 }
