@@ -46,11 +46,12 @@ public class EnemyScript : MonoBehaviour {
                 {
                     currentNode = currentPath[next];
                     currentPath = null;
+                    timer = 3f;
                 }
                 else
                 {
                     next++;
-                    timer = 3f;
+                    timer = 1f;
                 }
             }
             else if (timer > 0)
@@ -59,7 +60,7 @@ public class EnemyScript : MonoBehaviour {
             }
             else
             {
-                if (Mathf.Abs(dir.magnitude - 0.5f) <= 0.4f)
+                if (Mathf.Abs(dir.magnitude) <= (speed / 10))
                 {
                     Vector3 pos = currentPath[Mathf.Abs(next)].transform.position;
                     transform.position = new Vector3(pos.x, pos.y, transform.position.z);
@@ -103,6 +104,7 @@ public class EnemyScript : MonoBehaviour {
                 else
                 {
                     queue.Enqueue(node);
+                    partialPaths.Add(node, new List<Waypoint>(path));
                 }
             }
         }
