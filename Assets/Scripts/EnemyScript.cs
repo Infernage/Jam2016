@@ -10,6 +10,7 @@ public class EnemyScript : MonoBehaviour {
     private List<Waypoint> currentPath;
     private int next;
     private float timer = 3f;
+    private float rotateTimer;
     private Transform spriteTransform;
 
 	// Use this for initialization
@@ -58,17 +59,24 @@ public class EnemyScript : MonoBehaviour {
                     currentNode = currentPath[next];
                     currentPath = null;
                     timer = 3f;
+                    rotateTimer = Random.Range(0.5f, 1.5f);
                 }
                 else
                 {
                     next++;
-                    timer = 1f;
+                    //timer = 1f;
                     Rotate();
                 }
             }
             else if (timer > 0)
             {
                 timer -= Time.deltaTime;
+                rotateTimer -= Time.deltaTime;
+                if (rotateTimer <= 0)
+                {
+                    spriteTransform.rotation = Quaternion.Euler(0, 0, Random.Range(1, 7) * 45);
+                    rotateTimer = Random.Range(0.5f, 1.5f);
+                }
             }
             else
             {
@@ -76,7 +84,12 @@ public class EnemyScript : MonoBehaviour {
                 {
                     Vector3 pos = currentPath[Mathf.Abs(next)].transform.position;
                     transform.position = new Vector3(pos.x, pos.y, transform.position.z);
-                } else transform.Translate(dir.normalized * speed * Time.deltaTime);
+                }
+                else
+                {
+                    Rotate();
+                    transform.Translate(dir.normalized * speed * Time.deltaTime);
+                }
             }
         }
         else
