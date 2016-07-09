@@ -20,25 +20,11 @@ public class EnemyScript : MonoBehaviour {
         spriteTransform = transform.FindChild("Sprite");
 
         GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+        nodeList = new List<Waypoint>();
         foreach (GameObject obj in waypoints)
         {
             obj.GetComponent<SpriteRenderer>().enabled = false;
-        }
-
-        // Breadth First Search from initial waypoint
-        Waypoint current = FindObjectOfType<Waypoint>();
-        Queue<Waypoint> queue = new Queue<Waypoint>();
-        nodeList = new List<Waypoint>();
-        queue.Enqueue(current);
-        while (queue.Count > 0)
-        {
-            current = queue.Dequeue();
-            nodeList.Add(current);
-            foreach (Waypoint node in current.linkedNodes)
-            {
-                if (nodeList.Contains(node)) continue;
-                queue.Enqueue(node);
-            }
+            nodeList.Add(obj.GetComponent<Waypoint>());
         }
 
         // Get random node
