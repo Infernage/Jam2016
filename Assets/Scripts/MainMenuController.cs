@@ -10,6 +10,7 @@ public class MainMenuController : MonoBehaviour
     private GameObject panelMain, panelSelector, panelCredits, panelBackground, panelCharacter, buttonBack;
     private Image female, male;
     public Sprite maleSprite, femaleSprite;
+    private AudioSource audioSource;
 
     public void Awake()
     {
@@ -21,6 +22,7 @@ public class MainMenuController : MonoBehaviour
         panelCharacter = GameObject.Find("Canvas/PanelCharacter");
         female = GameObject.Find("Canvas/PanelCharacter/Female/Image").GetComponent<Image>();
         male = GameObject.Find("Canvas/PanelCharacter/Male/Image").GetComponent<Image>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Start()
@@ -52,6 +54,7 @@ public class MainMenuController : MonoBehaviour
         panelMain.SetActive(true);
         panelBackground.SetActive(true);
         panelCredits.SetActive(false);
+        panelCharacter.SetActive(false);
     }
 
     public void selectLevel(string name)
@@ -64,6 +67,7 @@ public class MainMenuController : MonoBehaviour
     public void SelectCharacter(string character)
     {
         PlayerPrefs.SetString("character", character);
+        audioSource.Play();
         if (character.Equals("female"))
         {
             female.sprite = femaleSprite;
@@ -78,7 +82,7 @@ public class MainMenuController : MonoBehaviour
     public IEnumerator Wait()
     {
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(audioSource.clip.length);
         LoadLevel();
     }
 
