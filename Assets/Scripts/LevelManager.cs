@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class LevelManager : MonoBehaviour
     private AudioSource audioSource;
     private GameObject[] computers;
     public static int computerCodeStatic = 0;
-    private GameObject combinationPanel,crouchedPanel;
+    private GameObject combinationPanel, crouchedPanel, panelControl;
     private GameObject textCode, textObjects;
 
     // Use this for initialization
@@ -29,6 +30,7 @@ public class LevelManager : MonoBehaviour
         textCode = GameObject.Find("Canvas/TextCode");
         textObjects = GameObject.Find("Canvas/TextObjects");
         crouchedPanel = GameObject.Find("Canvas/CrouchedPanel");
+        panelControl = GameObject.Find("Canvas/PanelControl");
         audioSource = GetComponent<AudioSource>();
         setCodeOnComputer();
         panelGrid.SetActive(false);
@@ -38,6 +40,11 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.anyKey)
+        {
+            panelControl.SetActive(false);
+        }
+
         if (playerDetected)
         {
             currentState = State.Trapped;
@@ -66,13 +73,13 @@ public class LevelManager : MonoBehaviour
             panelGrid.SetActive(true);
             characterScript.enabled = false;
             GameObject[] guards = GameObject.FindGameObjectsWithTag("Guard");
-            foreach(GameObject guard in guards)
+            foreach (GameObject guard in guards)
             {
                 EnemyScript script = guard.GetComponent<EnemyScript>();
                 script.enabled = false;
             }
             panelGrid.GetComponent<Animator>().Play("GridAnimation");
-            
+            GameObject.Find("Main Camera").GetComponent<AudioSource>().Stop();
             audioSource.clip = gridAudio;
             audioSource.Play();
         }
@@ -100,5 +107,17 @@ public class LevelManager : MonoBehaviour
         computerCodeStatic = Random.Range(1, 9999);
         Debug.Log("El código del banco es:" + computerCodeStatic.ToString());
         computers[Random.Range(0, computers.Length-1)].GetComponent<ComputersScript>().computerCode = computerCodeStatic;
+    }
+
+    public void PlayAgain()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(Application.loadedLevel);
+    }
+
+    public void BackToMain()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
     }
 }
