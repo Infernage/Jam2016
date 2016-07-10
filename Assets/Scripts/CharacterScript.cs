@@ -106,7 +106,7 @@ public class CharacterScript : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
         //TODO Esto lo podemos cambiar a !="Untagged" y después según lo que sea pues lo cogemos, o desaparece o lo que se quiera
-        if (collision.gameObject.tag == "Unttaged")
+        if (collision.gameObject.tag != "Unttaged")
         {
             //Destroy(collision.gameObject);
             Debug.Log("Dentro del colision");
