@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class CharacterScript : MonoBehaviour
 {
     public float minObjectsForWin = 5;
+    private int objects = 0;
     private List<GameObject> objectsCollected = new List<GameObject>();
     public float speed = 5;
     public float visionDistance = 10, visionAngle = 20;
     private GameObject goWhatISee;
     private bool crouched = false;
+    private GameObject textoCode;
+    private GameObject textObjects;
 
     public bool HasMinObjects()
     {
@@ -20,6 +24,10 @@ public class CharacterScript : MonoBehaviour
     void Start()
     {
 
+        textoCode = GameObject.Find("Canvas/TextCode");
+        textObjects = GameObject.Find("Canvas/TextObjects");
+        textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + minObjectsForWin;
+        textoCode.SetActive(false);
     }
 
     // Update is called once per frame
@@ -58,10 +66,15 @@ public class CharacterScript : MonoBehaviour
                 if (goWhatISee.tag == "Joya")
                 {
                     Debug.Log("Puedo coger esto: " + goWhatISee.tag);
+                    objects++;
+                    textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + minObjectsForWin;
                     Destroy(goWhatISee);
                 }
                 else if (goWhatISee.tag == "Computer")
                 {
+
+                    textoCode.SetActive(true);
+                    textoCode.GetComponent<Text>().text += goWhatISee.GetComponent<ComputersScript>().computerCode;
                     Debug.Log("El código que veo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode);
                 }
             }

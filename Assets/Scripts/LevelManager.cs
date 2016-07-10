@@ -1,29 +1,36 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour
+{
     public Vector2 playerStartWin;
     public float winRadious;
     private CharacterScript characterScript;
     private State currentState;
     private bool alert = false;
     private GameObject panelGrid;
-    public AudioClip gridAudio;
+    public AudioClip gridAudio, alarmAudio;
     private AudioSource audioSource;
     private GameObject[] computers;
     public static int computerCodeStatic = 0;
+    private GameObject combinationPanel;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         characterScript = FindObjectOfType<CharacterScript>();
         panelGrid = GameObject.Find("PanelGrid");
+        combinationPanel = GameObject.Find("Canvas/CombinationPanel");
         audioSource = GetComponent<AudioSource>();
         setCodeOnComputer();
         panelGrid.SetActive(false);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    if (currentState == State.Play && characterScript.HasMinObjects())
+        combinationPanel.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (currentState == State.Play && characterScript.HasMinObjects())
         {
             currentState = State.Exit;
         }
@@ -49,6 +56,8 @@ public class LevelManager : MonoBehaviour {
         if (alert)
         {
             // TODO: All enemies are alerted (quick movement, etc)
+            audioSource.clip = alarmAudio;
+            audioSource.Play();
         }
     }
 
