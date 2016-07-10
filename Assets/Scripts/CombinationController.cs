@@ -7,7 +7,7 @@ using System;
 public class CombinationController : MonoBehaviour
 {
     [Range(0, 9)]
-    public int[] code = new int[4];
+    private int[] code = new int[4];
     public float secondsToClean = 3f;
     private int[] inputCode;
     private int fails = 3;
@@ -112,7 +112,8 @@ public class CombinationController : MonoBehaviour
     private bool CompareCodes()
     {
         bool correct = true;
-        for (int i = 0; i < digitArr(LevelManager.computerCodeStatic).Length; i++)
+        code = digitArr(LevelManager.computerCodeStatic);
+        for (int i = 0; i < code.Length; i++)
         {
             if (code[i] != inputCode[i])
             {
