@@ -13,7 +13,9 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
         //Calculate and store the offset value by getting the distance between the player's position and camera's position.
+        player = GameObject.FindGameObjectWithTag("Player");
         offset = transform.position - player.transform.position;
+       
     }
 
     // LateUpdate is called after Update each frame

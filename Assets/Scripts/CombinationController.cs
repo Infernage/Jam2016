@@ -16,7 +16,7 @@ public class CombinationController : MonoBehaviour
     private bool waiting = false;
     private Text textInput;
     private GameObject ledPanel;
-    public AudioClip clipError, clipCorrect, clipClick;
+    public AudioClip clipError, clipCorrect, clipClick,alarm;
     private AudioSource source;
 
     public void Awake()
@@ -114,6 +114,7 @@ public class CombinationController : MonoBehaviour
             textInput.text += number.ToString();
             if (numbersInserted == 4)
             {
+                waiting = true;
                 CheckCode();
             }
         }
@@ -128,6 +129,7 @@ public class CombinationController : MonoBehaviour
             source.clip = clipCorrect;
             source.Play();
             textInput.text = "Correcto";
+            StartCoroutine(WaitToClose());
             door.SetActive(false);
         }
         else
@@ -140,10 +142,19 @@ public class CombinationController : MonoBehaviour
             inputCode = new int[4];
             if (fails == 0)
             {
-                // TODO: Loose game
+                LevelManager manager = FindObjectOfType<LevelManager>();
+                manager.playerDetected = true;
+                source.clip = alarm;
+                source.Play();
             }
         }
         StartCoroutine(CleanScreen());
+    }
+
+    IEnumerator WaitToClose()
+    {
+        yield return new WaitForSeconds(0.8f);
+        this.gameObject.SetActive(false);
     }
 
     private bool CompareCodes()

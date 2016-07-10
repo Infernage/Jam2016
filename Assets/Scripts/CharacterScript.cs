@@ -15,10 +15,10 @@ public class CharacterScript : MonoBehaviour
     private GameObject textoCode;
     private GameObject textObjects;
     private Image crouchedImage;
-    private GameObject combinationPanel;
+    private GameObject combinationPanel,panelWin;
     public Sprite standSprite, crouchedSprite;
     private AudioSource source;
-    public AudioClip objectAudio, keyboardAudio, walkOne, walkTwo, walkThree, walkFour;
+    public AudioClip objectAudio, keyboardAudio, walkOne, walkTwo, walkThree, walkFour,audioWin;
     private float timer;
     private float audioTime = 0f;
     private float storedSpeed;
@@ -31,6 +31,7 @@ public class CharacterScript : MonoBehaviour
     public void Awake()
     {
         combinationPanel = GameObject.Find("Canvas/CombinationPanel");
+        panelWin = GameObject.Find("Canvas/PanelWin");
     }
 
     // Use this for initialization
@@ -44,6 +45,7 @@ public class CharacterScript : MonoBehaviour
         textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + numObjectsInMap;
         source = GetComponent<AudioSource>();
         textoCode.SetActive(false);
+        panelWin.SetActive(false);
         storedSpeed = speed;
     }
 
@@ -82,10 +84,6 @@ public class CharacterScript : MonoBehaviour
     void Update()
     {
         if (speed == 0 && !combinationPanel.activeInHierarchy) speed = storedSpeed;
-        //float h = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        //float v = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-        //transform.Translate(h, v, 0);
-        //transform.Rotate(Vector3.right * Time.deltaTime);
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             transform.eulerAngles = new Vector3(0, 0, 270);
@@ -113,24 +111,31 @@ public class CharacterScript : MonoBehaviour
 
         if (goWhatISee != null)
         {
+            if (goWhatISee.tag == "Joya")
+            {
+                Debug.Log("Puedo coger esto: " + goWhatISee.tag);
+                objects++;
+                textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + numObjectsInMap;
+                source.clip = objectAudio;
+                source.Play();
+                Destroy(goWhatISee);
+                if (objects == numObjectsInMap)
+                {
+                    source.clip = audioWin;
+                    source.Play();
+                    Time.timeScale = 0;
+                    panelWin.SetActive(true);
+                }
+            }
             //TODO Lo queremos como E o como Espacio??
             if (canGetObjects() != "" && Input.GetKeyDown(KeyCode.E))
             {
-                if (goWhatISee.tag == "Joya")
-                {
-                    Debug.Log("Puedo coger esto: " + goWhatISee.tag);
-                    objects++;
-                    textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + numObjectsInMap;
-                    source.clip = objectAudio;
-                    source.Play();
-                    Destroy(goWhatISee);
-                }
-                else if (goWhatISee.tag == "Computer")
+                if (goWhatISee.tag == "Computer")
                 {
                     source.clip = keyboardAudio;
                     source.Play();
                     textoCode.SetActive(true);
-                    textoCode.GetComponent<Text>().text += goWhatISee.GetComponent<ComputersScript>().computerCode;
+                    textoCode.GetComponent<Text>().text = "El codigo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode;
                     Debug.Log("El código que veo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode);
                 }
             }
