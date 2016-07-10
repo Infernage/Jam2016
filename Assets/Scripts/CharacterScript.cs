@@ -14,6 +14,8 @@ public class CharacterScript : MonoBehaviour
     private bool crouched = false;
     private GameObject textoCode;
     private GameObject textObjects;
+    private Image crouchedImage;
+    public Sprite standSprite, crouchedSprite;
 
     public bool HasMinObjects()
     {
@@ -26,6 +28,7 @@ public class CharacterScript : MonoBehaviour
 
         textoCode = GameObject.Find("Canvas/TextCode");
         textObjects = GameObject.Find("Canvas/TextObjects");
+        crouchedImage = GameObject.Find("Canvas/Crouched").GetComponent<Image>();
         textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + minObjectsForWin;
         textoCode.SetActive(false);
     }
@@ -82,10 +85,12 @@ public class CharacterScript : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             crouched = true;
+            crouchedImage.sprite = crouchedSprite;
         }
         else
         {
             crouched = false;
+            crouchedImage.sprite = standSprite;
         }
 
     }
