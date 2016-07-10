@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
     private AudioSource audioSource;
     private GameObject[] computers;
     public static int computerCodeStatic = 0;
-    private GameObject combinationPanel;
+    private GameObject combinationPanel,crouchedPanel;
     private GameObject textCode, textObjects;
 
     // Use this for initialization
@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
         combinationPanel = GameObject.Find("Canvas/CombinationPanel");
         textCode = GameObject.Find("Canvas/TextCode");
         textObjects = GameObject.Find("Canvas/TextObjects");
+        crouchedPanel = GameObject.Find("Canvas/CrouchedPanel");
         audioSource = GetComponent<AudioSource>();
         setCodeOnComputer();
         panelGrid.SetActive(false);
@@ -51,8 +52,10 @@ public class LevelManager : MonoBehaviour
             // TODO: Loose
             textObjects.SetActive(false);
             textCode.SetActive(false);
+            crouchedPanel.SetActive(false);
             panelGrid.SetActive(true);
             panelGrid.GetComponent<Animator>().Play("GridAnimation");
+            
             audioSource.clip = gridAudio;
             audioSource.Play();
         }
