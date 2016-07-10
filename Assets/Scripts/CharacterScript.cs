@@ -15,15 +15,25 @@ public class CharacterScript : MonoBehaviour
     private GameObject textoCode;
     private GameObject textObjects;
     private Image crouchedImage;
+    private GameObject combinationPanel;
     public Sprite standSprite, crouchedSprite;
+<<<<<<< HEAD
     private AudioSource source;
     public AudioClip objectAudio, keyboardAudio, walkOne, walkTwo, walkThree, walkFour;
     private float timer;
     private float audioTime = 0f;
+=======
+    private float storedSpeed;
+>>>>>>> 55b482d2e5f6c4ad6823154395e63fb3ebcf2002
 
     public bool HasMinObjects()
     {
         return objectsCollected.Count >= minObjectsForWin;
+    }
+
+    public void Awake()
+    {
+        combinationPanel = GameObject.Find("Canvas/CombinationPanel");
     }
 
     // Use this for initialization
@@ -32,10 +42,11 @@ public class CharacterScript : MonoBehaviour
 
         textoCode = GameObject.Find("Canvas/TextCode");
         textObjects = GameObject.Find("Canvas/TextObjects");
-        crouchedImage = GameObject.Find("Canvas/Crouched").GetComponent<Image>();
+        crouchedImage = GameObject.Find("Canvas/CrouchedPanel").GetComponent<Image>();
         textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + minObjectsForWin;
         source = GetComponent<AudioSource>();
         textoCode.SetActive(false);
+        storedSpeed = speed;
     }
 
     private void WalkSound()
@@ -72,6 +83,7 @@ public class CharacterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (speed == 0 && !combinationPanel.activeInHierarchy) speed = storedSpeed;
         //float h = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
         //float v = Input.GetAxis("Vertical") * Time.deltaTime * speed;
         //transform.Translate(h, v, 0);
@@ -166,6 +178,11 @@ public class CharacterScript : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject.tag.Equals("LockedDoor"))
+        {
+            combinationPanel.SetActive(true);
+            speed = 0;
+        }
         //TODO Esto lo podemos cambiar a !="Untagged" y después según lo que sea pues lo cogemos, o desaparece o lo que se quiera
         if (collision.gameObject.tag != "Unttaged")
         {

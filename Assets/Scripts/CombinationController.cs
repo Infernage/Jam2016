@@ -9,6 +9,7 @@ public class CombinationController : MonoBehaviour
     [Range(0, 9)]
     private int[] code = new int[4];
     public float secondsToClean = 3f;
+    public GameObject door;
     private int[] inputCode;
     private int fails = 3;
     private int numbersInserted = 0;
@@ -127,6 +128,7 @@ public class CombinationController : MonoBehaviour
             source.clip = clipCorrect;
             source.Play();
             textInput.text = "Correcto";
+            door.SetActive(false);
         }
         else
         {
@@ -136,6 +138,10 @@ public class CombinationController : MonoBehaviour
             source.Play();
             textInput.text = "Error";
             inputCode = new int[4];
+            if (fails == 0)
+            {
+                // TODO: Loose game
+            }
         }
         StartCoroutine(CleanScreen());
     }
