@@ -99,6 +99,6 @@ public class LevelManager : MonoBehaviour
         computers = GameObject.FindGameObjectsWithTag("Computer");
         computerCodeStatic = Random.Range(1, 9999);
         Debug.Log("El código del banco es:" + computerCodeStatic.ToString());
-        computers[Random.Range(0, computers.Length)].GetComponent<ComputersScript>().computerCode = computerCodeStatic;
+        computers[Random.Range(0, computers.Length-1)].GetComponent<ComputersScript>().computerCode = computerCodeStatic;
     }
 }
