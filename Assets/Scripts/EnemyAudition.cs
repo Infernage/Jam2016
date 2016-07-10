@@ -28,12 +28,17 @@ public class EnemyAudition : MonoBehaviour
             Vector2 targetDirection = player.transform.position - transform.position;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection);
 
-            if(hit.collider != null && hit.collider.Equals(player.GetComponent<BoxCollider2D>()))
+            if(hit.collider != null && hit.collider.Equals(player.GetComponent<BoxCollider2D>()) && noInputs())
             {
                 print("Te he oído");
                 levelScript.playerDetected = true;
                 enemyScript.RotateToPlayer();
             }
         }
+    }
+
+    public bool noInputs()
+    {
+        return Input.GetAxis("Vertical") == 0.0f && Input.GetAxis("Horizontal") == 0.0f;
     }
 }
