@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
     private GameObject[] computers;
     public static int computerCodeStatic = 0;
     private GameObject combinationPanel;
+    private GameObject textCode, textObjects;
 
     // Use this for initialization
     void Start()
@@ -21,6 +22,8 @@ public class LevelManager : MonoBehaviour
         characterScript = FindObjectOfType<CharacterScript>();
         panelGrid = GameObject.Find("PanelGrid");
         combinationPanel = GameObject.Find("Canvas/CombinationPanel");
+        textCode = GameObject.Find("Canvas/TextCode");
+        textObjects = GameObject.Find("Canvas/TextObjects");
         audioSource = GetComponent<AudioSource>();
         setCodeOnComputer();
         panelGrid.SetActive(false);
@@ -46,6 +49,8 @@ public class LevelManager : MonoBehaviour
         if (currentState == State.Trapped)
         {
             // TODO: Loose
+            textObjects.SetActive(false);
+            textCode.SetActive(false);
             panelGrid.SetActive(true);
             panelGrid.GetComponent<Animator>().Play("GridAnimation");
             audioSource.clip = gridAudio;
