@@ -123,4 +123,12 @@ public class EnemyScript : MonoBehaviour {
         spriteTransform = transform.FindChild("Sprite");
         spriteTransform.rotation = Quaternion.Euler(0, 0, angle - 90.0f);
     }
+
+    public void RotateToPlayer()
+    {
+        Vector3 direction = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        spriteTransform = transform.FindChild("Sprite");
+        spriteTransform.rotation = Quaternion.Euler(0, 0, angle - 90.0f);
+    }
 }

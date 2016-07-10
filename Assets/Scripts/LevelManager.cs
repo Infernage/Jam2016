@@ -5,7 +5,9 @@ public class LevelManager : MonoBehaviour
 {
     public Vector2 playerStartWin;
     public float winRadious;
+    public bool playerDetected, alreadyLost;
     private CharacterScript characterScript;
+    private EnemyAudition auditionScript;
     private State currentState;
     private bool alert = false;
     private GameObject panelGrid;
@@ -20,6 +22,8 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         characterScript = FindObjectOfType<CharacterScript>();
+        playerDetected = false;
+        alreadyLost = false;
         panelGrid = GameObject.Find("PanelGrid");
         combinationPanel = GameObject.Find("Canvas/CombinationPanel");
         textCode = GameObject.Find("Canvas/TextCode");
@@ -33,6 +37,11 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerDetected)
+        {
+            currentState = State.Trapped;
+        }
+
         if (currentState == State.Play && characterScript.HasMinObjects())
         {
             currentState = State.Exit;
@@ -46,12 +55,20 @@ public class LevelManager : MonoBehaviour
         }
 
         // Trapped state
-        if (currentState == State.Trapped)
+        if (currentState == State.Trapped && !alreadyLost)
         {
             // TODO: Loose
+            alreadyLost = true;
             textObjects.SetActive(false);
             textCode.SetActive(false);
             panelGrid.SetActive(true);
+            characterScript.enabled = false;
+            GameObject[] guards = GameObject.FindGameObjectsWithTag("Guard");
+            foreach(GameObject guard in guards)
+            {
+                EnemyScript script = guard.GetComponent<EnemyScript>();
+                script.enabled = false;
+            }
             panelGrid.GetComponent<Animator>().Play("GridAnimation");
             audioSource.clip = gridAudio;
             audioSource.Play();

@@ -16,18 +16,11 @@ public class EnemyVision : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (canSeePlayer())
-        {
-            print("Te veo!!!");
-        }else
-        {
-            print("No te veo!!!");
-        }
+        canSeePlayer();
     }
 
-    public bool canSeePlayer()
+    public void canSeePlayer()
     {
-        bool result = false;
 
         Vector2 targetDirection = player.transform.position - transform.position;
         Vector2 forward = transform.up;
@@ -35,10 +28,14 @@ public class EnemyVision : MonoBehaviour
 
         if(Vector2.Angle(forward, targetDirection) <= visionAngle && distance <= visionDistance)
         {
-            result = true;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, visionDistance);
+            if(hit.collider != null && hit.collider.Equals(player.GetComponent<BoxCollider2D>()))
+            {
+                LevelManager manager = FindObjectOfType<LevelManager>();
+                manager.playerDetected = true;
+            }
         }
 
-        return result;
     }
 
     /*public void OnDrawGizmosSelected()
