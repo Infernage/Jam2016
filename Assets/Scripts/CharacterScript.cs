@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CharacterScript : MonoBehaviour
 {
-    public float minObjectsForWin = 5;
+    public float numObjectsInMap;
     private int objects = 0;
     private List<GameObject> objectsCollected = new List<GameObject>();
     public float speed = 5;
@@ -17,18 +17,15 @@ public class CharacterScript : MonoBehaviour
     private Image crouchedImage;
     private GameObject combinationPanel;
     public Sprite standSprite, crouchedSprite;
-<<<<<<< HEAD
     private AudioSource source;
     public AudioClip objectAudio, keyboardAudio, walkOne, walkTwo, walkThree, walkFour;
     private float timer;
     private float audioTime = 0f;
-=======
     private float storedSpeed;
->>>>>>> 55b482d2e5f6c4ad6823154395e63fb3ebcf2002
 
     public bool HasMinObjects()
     {
-        return objectsCollected.Count >= minObjectsForWin;
+        return objectsCollected.Count >= numObjectsInMap;
     }
 
     public void Awake()
@@ -39,11 +36,12 @@ public class CharacterScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        GameObject[] pickups = GameObject.FindGameObjectsWithTag("Joya");
+        numObjectsInMap = pickups.Length;
         textoCode = GameObject.Find("Canvas/TextCode");
         textObjects = GameObject.Find("Canvas/TextObjects");
         crouchedImage = GameObject.Find("Canvas/CrouchedPanel").GetComponent<Image>();
-        textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + minObjectsForWin;
+        textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + numObjectsInMap;
         source = GetComponent<AudioSource>();
         textoCode.SetActive(false);
         storedSpeed = speed;
@@ -122,7 +120,7 @@ public class CharacterScript : MonoBehaviour
                 {
                     Debug.Log("Puedo coger esto: " + goWhatISee.tag);
                     objects++;
-                    textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + minObjectsForWin;
+                    textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + numObjectsInMap;
                     source.clip = objectAudio;
                     source.Play();
                     Destroy(goWhatISee);
