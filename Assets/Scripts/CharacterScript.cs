@@ -16,6 +16,10 @@ public class CharacterScript : MonoBehaviour
     private GameObject textObjects;
     private Image crouchedImage;
     public Sprite standSprite, crouchedSprite;
+    private AudioSource source;
+    public AudioClip objectAudio, keyboardAudio, walkOne, walkTwo, walkThree, walkFour;
+    private float timer;
+    private float audioTime = 0f;
 
     public bool HasMinObjects()
     {
@@ -30,7 +34,39 @@ public class CharacterScript : MonoBehaviour
         textObjects = GameObject.Find("Canvas/TextObjects");
         crouchedImage = GameObject.Find("Canvas/Crouched").GetComponent<Image>();
         textObjects.GetComponent<Text>().text = "Has conseguido 0 objetos de " + minObjectsForWin;
+        source = GetComponent<AudioSource>();
         textoCode.SetActive(false);
+    }
+
+    private void WalkSound()
+    {
+        timer += Time.deltaTime;
+        AudioClip clipToPlay = walkOne;
+        int rnd = Random.Range(0, 4);
+        print(rnd);
+        switch (rnd)
+        {
+            case 0:
+                clipToPlay = walkOne;
+                break;
+            case 1:
+                clipToPlay = walkTwo;
+                break;
+            case 2:
+                clipToPlay = walkThree;
+                break;
+            case 3:
+                clipToPlay = walkFour;
+                break;
+
+        }
+        if (timer >= audioTime)
+        {
+            audioTime = clipToPlay.length;
+            source.clip = clipToPlay;
+            source.Play();
+            timer = 0;
+        }
     }
 
     // Update is called once per frame
@@ -44,21 +80,25 @@ public class CharacterScript : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0, 0, 270);
             transform.Translate(Vector3.up * speed * Time.deltaTime);
+            WalkSound();
         }
         else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             transform.eulerAngles = new Vector3(0, 0, 90);
             transform.Translate(Vector3.up * speed * Time.deltaTime);
+            WalkSound();
         }
         else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
             transform.Translate(Vector3.up * speed * Time.deltaTime);
+            WalkSound();
         }
         else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             transform.eulerAngles = new Vector3(0, 0, 180);
             transform.Translate(Vector3.up * speed * Time.deltaTime);
+            WalkSound();
         }
 
         if (goWhatISee != null)
@@ -71,11 +111,14 @@ public class CharacterScript : MonoBehaviour
                     Debug.Log("Puedo coger esto: " + goWhatISee.tag);
                     objects++;
                     textObjects.GetComponent<Text>().text = "Has conseguido " + objects + " objetos de " + minObjectsForWin;
+                    source.clip = objectAudio;
+                    source.Play();
                     Destroy(goWhatISee);
                 }
                 else if (goWhatISee.tag == "Computer")
                 {
-
+                    source.clip = keyboardAudio;
+                    source.Play();
                     textoCode.SetActive(true);
                     textoCode.GetComponent<Text>().text += goWhatISee.GetComponent<ComputersScript>().computerCode;
                     Debug.Log("El código que veo es: " + goWhatISee.GetComponent<ComputersScript>().computerCode);

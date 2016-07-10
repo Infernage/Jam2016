@@ -15,12 +15,19 @@ public class CombinationController : MonoBehaviour
     private bool waiting = false;
     private Text textInput;
     private GameObject ledPanel;
+    public AudioClip clipError, clipCorrect, clipClick;
+    private AudioSource source;
 
     public void Awake()
     {
         inputCode = new int[4];
         textInput = GameObject.Find("CombinationPanel/LedPanel/Text").GetComponent<Text>();
         ledPanel = GameObject.Find("CombinationPanel/LedPanel");
+    }
+
+    public void Start()
+    {
+        source = GetComponent<AudioSource>();
     }
 
     public void Update()
@@ -31,51 +38,68 @@ public class CombinationController : MonoBehaviour
         }
     }
 
+    private void PlayClick()
+    {
+        source.clip = clipClick;
+        source.Play();
+    }
+
     private void inputKeyBoard()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0)|| Input.GetKeyDown(KeyCode.Keypad0))
+        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
         {
             SetCode(0);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
             SetCode(1);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
             SetCode(2);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
             SetCode(3);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
             SetCode(4);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
         {
+            PlayClick();
             SetCode(5);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
         {
             SetCode(6);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
         {
             SetCode(7);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
         {
             SetCode(8);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
             SetCode(9);
+            PlayClick();
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             ClosePanel();
+            PlayClick();
         }
     }
 
@@ -83,6 +107,7 @@ public class CombinationController : MonoBehaviour
     {
         if (!waiting)
         {
+            PlayClick();
             inputCode[numbersInserted] = number;
             numbersInserted++;
             textInput.text += number.ToString();
@@ -98,11 +123,17 @@ public class CombinationController : MonoBehaviour
         if (CompareCodes())
         {
             textInput.fontSize = 60;
+            WaitToSound();
+            source.clip = clipCorrect;
+            source.Play();
             textInput.text = "Correcto";
         }
         else
         {
             fails--;
+            WaitToSound();
+            source.clip = clipError;
+            source.Play();
             textInput.text = "Error";
             inputCode = new int[4];
         }
@@ -135,6 +166,11 @@ public class CombinationController : MonoBehaviour
         var arr = digits.ToArray();
         Array.Reverse(arr);
         return arr;
+    }
+
+    IEnumerator WaitToSound()
+    {
+        yield return new WaitForSeconds(source.clip.length);
     }
 
     IEnumerator CleanScreen()
